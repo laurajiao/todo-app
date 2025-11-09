@@ -8,5 +8,4 @@ public enum TaskStatus
     InProgress,
     Completed,
     Cancelled,
-    Overdue
 }

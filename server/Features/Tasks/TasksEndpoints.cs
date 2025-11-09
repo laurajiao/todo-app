@@ -12,34 +12,14 @@ public static class TasksEndpoints
     {
         var group = app.MapGroup("/tasks");
 
-        static async Task<List<TaskItem>> UpdateOverdueTasks(TodoDb db)
-        {
-            var now = DateTime.UtcNow;
-            var updated = false;
-            var tasks = await db.Tasks.ToListAsync();
-            foreach (var task in tasks)
-            {
-                if (task.DueDate is not null &&
-                    task.DueDate < now &&
-                    task.Status != TaskStatus.Completed &&
-                    task.Status != TaskStatus.Cancelled &&
-                    task.Status != TaskStatus.Overdue)
-                {
-                    task.Status = TaskStatus.Overdue;
-                    updated = true;
-                }
-            }
-            if (updated)
-                await db.SaveChangesAsync();
-
-            return tasks;
-        }
-
         // GET /tasks  
         group.MapGet("/", async (TodoDb db) =>
         {
-            var tasks = await UpdateOverdueTasks(db);
-            return Results.Ok(tasks.OrderByDescending(t => t.Id));
+            var tasks = await db.Tasks
+                .OrderByDescending(t => t.Id)
+                .ToListAsync();
+
+            return Results.Ok(tasks);
         });
 
         // POST/tasks/{id}  
