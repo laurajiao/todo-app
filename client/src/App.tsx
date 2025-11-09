@@ -1,6 +1,6 @@
 import {api} from "@/api";
 import { useEffect, useState } from "react";
-import type { Task, UpdateTaskDto } from "@/types";
+import type { Task, UpdateTaskDto,CreateTaskDto } from "@/types";
 import { KanbanBoard } from "@/components/kanban/KanbanBoard";
 
 function App() {
@@ -36,15 +36,20 @@ function App() {
     await load();
   };
 
+  const create = async (dto: CreateTaskDto) => {
+  await api.createTask(dto);
+  await load();
+};
+
   return (
-    <div className="min-h-screen text-slate-50 p-6">
-      <h1 className="text-2xl font-bold mb-4">Tasks Kanban Board</h1>
+    <div className="min-h-screen text-slate-50 p-10">
+     
 
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-400">Error: {error}</p>}
 
       {!loading && !error && (
-        <KanbanBoard tasks={tasks} onUpdate={update} onDelete={remove} />
+        <KanbanBoard tasks={tasks} onUpdate={update} onDelete={remove} onCreate={create} />
       )}
     </div>
   );

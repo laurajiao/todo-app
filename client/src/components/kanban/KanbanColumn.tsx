@@ -4,7 +4,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { KanbanTaskCard } from "@/components/kanban/KanbanTaskCard";
 
-
 type TaskStatus = Task["status"];
 
 type Props = {
@@ -16,11 +15,10 @@ type Props = {
 };
 
 const statusColor: Record<TaskStatus, string> = {
-  NotStarted: "bg-slate-900/60",
-  InProgress: "bg-blue-900/40",
-  Completed: "bg-emerald-900/40",
-  Cancelled: "bg-zinc-900/40",
-  Overdue: "bg-red-900/40",
+  NotStarted: "bg-slate-700/60",
+  InProgress: "bg-blue-700/50",
+  Completed: "bg-emerald-700/50",
+  Cancelled: "bg-zinc-700/50",
 };
 
 export function KanbanColumn({
@@ -31,12 +29,10 @@ export function KanbanColumn({
   onDelete,
 }: Props) {
   return (
-    <Card
-      className={`flex flex-col h-full ${statusColor[status]} border-slate-700`}
-    >
+    <Card className={`flex flex-col h-full ${statusColor[status]} border-slate-700`}>
       <CardHeader className="py-3 px-3 border-b border-slate-700/60">
         <div className="flex items-center justify-between gap-2">
-          <CardTitle className="text-sm flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-2">
             <span>{title}</span>
           </CardTitle>
           <Badge variant="outline" className="text-[11px]">
@@ -47,9 +43,7 @@ export function KanbanColumn({
       <CardContent className="flex-1 p-2">
         <ScrollArea className="h-[520px] pr-2">
           {tasks.length === 0 ? (
-            <div className="text-xs text-muted-foreground px-1 py-2">
-              No tasks.
-            </div>
+            <div className="px-1 py-2">No tasks.</div>
           ) : (
             tasks.map((t) => (
               <KanbanTaskCard

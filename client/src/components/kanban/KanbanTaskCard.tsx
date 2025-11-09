@@ -3,7 +3,7 @@ import type { Task, UpdateTaskDto } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EditTaskDialog } from "@/components/kanban/EditTaskDialog";
+import { TaskDialog } from "@/components/kanban/EditTaskDialog";
 
 function daysRemaining(deadline?: string | null) {
   if (!deadline) return null;
@@ -12,7 +12,6 @@ function daysRemaining(deadline?: string | null) {
 }
 
 function isOverdue(task: Task) {
-  if (task.status === "Overdue") return true;
   const d = daysRemaining(task.dueDate);
   return (
     d !== null &&
@@ -33,26 +32,25 @@ export function KanbanTaskCard({ task, onUpdate, onDelete }: Props) {
   const dleft = daysRemaining(task.dueDate);
   const [open, setOpen] = useState(false);
 
-  const handleSave = async (patch: UpdateTaskDto) => {
-    await onUpdate(task.id, patch);
-  };
-
   return (
     <>
-      <Card className="mb-2 shadow-sm hover:shadow-md transition">
-        <CardContent className="p-3 space-y-2">
+      <Card>
+        <CardContent className="px-3 space-y-2">
           <div className="flex items-start justify-between gap-2">
             <div>
               <div
                 className={
-                  "font-semibold text-sm " +
+                  "font-semibold text " +
                   (overdue ? "text-destructive" : "")
                 }
               >
                 {task.title}
+                {overdue && (
+                  <span className="ml-2 text-xs text-red-500">Overdue</span>
+                )}
               </div>
               {task.description && (
-                <div className="text-xs text-muted-foreground line-clamp-2">
+                <div className="mt-2 text-sm line-clamp-2">
                   {task.description}
                 </div>
               )}
@@ -64,7 +62,7 @@ export function KanbanTaskCard({ task, onUpdate, onDelete }: Props) {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <div>
               Deadline:{" "}
               {task.dueDate
@@ -76,17 +74,23 @@ export function KanbanTaskCard({ task, onUpdate, onDelete }: Props) {
                 : "—"}
             </div>
             <div className={overdue ? "text-destructive font-semibold" : ""}>
-              Days: {dleft === null ? "—" : dleft}
+              Days: {dleft === null ? "-" : dleft}
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-2 pt-1">
-            <Button size="sm" variant="outline" onClick={() => setOpen(true)}>
+          <div className="flex justify-end gap-2 pt-1">
+            <Button
+              className="cursor-pointer"
+              size="sm"
+              variant="outline"
+              onClick={() => setOpen(true)}
+            >
               Edit
             </Button>
             <Button
               size="sm"
               variant="destructive"
+              className="cursor-pointer"
               onClick={() => onDelete(task.id)}
             >
               Delete
@@ -95,11 +99,12 @@ export function KanbanTaskCard({ task, onUpdate, onDelete }: Props) {
         </CardContent>
       </Card>
 
-      <EditTaskDialog
+      <TaskDialog
+        mode="edit"
         task={task}
         open={open}
         onOpenChange={setOpen}
-        onSave={handleSave}
+        onSave={(dto) => onUpdate(task.id, dto)}
       />
     </>
   );

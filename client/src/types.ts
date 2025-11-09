@@ -3,7 +3,6 @@ export const TaskStatus = {
   InProgress: "InProgress",
   Completed: "Completed",
   Cancelled: "Cancelled",
-  Overdue: "Overdue",
 } as const;
 
 export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];  
@@ -24,4 +23,9 @@ export interface CreateTaskDto {
     dueDate?: string; // ISO date string
 };
 
-export type UpdateTaskDto = Partial<CreateTaskDto>;
+export type UpdateTaskDto = {
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  status?: TaskStatus;
+};
