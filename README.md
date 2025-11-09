@@ -25,7 +25,11 @@ git clone https://github.com/laurajiao/todo-app.git
 
   3.dotnet run
 
-  4.The API will start on a URL similar to: https://localhost:7295
+  4.In the console, look for a line like:
+   `Now listening on: http://localhost:5220`
+   or (if running with HTTPS)
+   `Now listening on: https://localhost:7295`
+   Use **that URL** as your API base.
 
 - Frontend setup (Vite + React + TypeScript)
   
@@ -35,7 +39,15 @@ git clone https://github.com/laurajiao/todo-app.git
      
   3.npm install
 
-  4.Create a .env file in the client directory:VITE_API_BASE=https://localhost:7295
+  4.Create a `.env` file in the `client` directory and set:
+
+   - If the backend is running on HTTP, for example:
+     `VITE_API_BASE=http://localhost:5220`
+
+   - If the backend is running on HTTPS, for example:
+     `VITE_API_BASE=https://localhost:7295`
+
+   (Use exactly the URL shown in the backend console.)
 
   5.Start the frontend dev server: npm run dev
   
